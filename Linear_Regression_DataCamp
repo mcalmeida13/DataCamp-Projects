@@ -94,15 +94,57 @@ from sklearn.metrics import confusion_matrix
 X_train, X_test, y_train, y_test = train_test_split(X,y, test_size = 0.4, random_state = 42)
 
 # Instantiate a k-NN classifier: knn
-knn = = KNeighborsClassifier(n_neighbors=6)
+knn = KNeighborsClassifier(n_neighbors=6) #classifica pelos 6 vizihos mais próximos
 
-# Fit the classifier to the training data
+# Fit the classifier to the training data #fita o treino
 knn.fit(X_train, y_train)
 
 # Predict the labels of the test data: y_pred
 y_pred = knn.predict(X_test)
 
 # Generate the confusion matrix and classification report
+print(confusion_matrix(y_test, y_pred)) #falsos e verdadeiros positivos
+print(classification_report(y_test, y_pred)) #desempenho da predição
+
+
+# Import the necessary modules
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, classification_report
+
+# Create training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.4, random_state=42)
+
+# Create the classifier: logreg
+logreg = LogisticRegression()
+
+# Fit the classifier to the training data
+logreg.fit(X_train, y_train)
+
+# Predict the labels of the test set: y_pred
+y_pred = logreg.predict(X_test)
+
+# Compute and print the confusion matrix and classification report
 print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
+from sklearn.metrics import roc_auc_score
+
+logreg = LogisticRegression()
+X_train, X_test, y_train, y_test = train_test_split(X, y,
+test_size=0.4, random_state=42)
+logreg.fit(X_train, y_train)
+y_pred_prob = logreg.predict_proba(X_test)[:,1]
+roc_auc_score(y_test, y_pred_prob)
+
+from sklearn.model_selection import cross_val_score
+cv_scores = cross_val_score(logreg, X, y, cv=5,
+scoring='roc_auc')
+print(cv_scores)
+
+from sklearn.model_selection import GridSearchCV
+param_grid = {'n_neighbors': np.arange(1, 50)}
+knn = KNeighborsClassifier()
+knn_cv = GridSearchCV(knn, param_grid, cv=5)
+knn_cv.fit(X, y)
+knn_cv.best_params_
+knn_cv.best_score_
