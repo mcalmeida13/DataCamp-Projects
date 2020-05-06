@@ -1,0 +1,18 @@
+import numpy as np
+from keras.layers import Dense
+from keras.models import Sequential
+
+
+predictors = np.loadtxt('predictors_data.csv', delimiter=',')
+n_cols = predictors.shape[1]
+
+
+model = Sequential() #type of model
+model.add(Dense(100, activation='relu', input_shape = (n_cols,))) #input layer
+model.add(Dense(100, activation='relu')) #second layer
+model.add(Dense(1)) #output
+
+model.compile(optimizer='adam', loss='mean_squared_error') #qual metodo compilar, e como medir a perda
+
+print("Loss function: " + model.loss)
+model.fit(predictors, target)
