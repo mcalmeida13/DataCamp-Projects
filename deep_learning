@@ -16,3 +16,26 @@ model.compile(optimizer='adam', loss='mean_squared_error') #qual metodo compilar
 
 print("Loss function: " + model.loss)
 model.fit(predictors, target)
+
+############### CATEGORICAL MODEL ################
+from keras.utils.np_utils import to_categorical
+data = pd.read_csv('basketball_shot_log.csv')
+predictors = data.drop(['shot_result'], axis=1).as_matrix()
+target = to_categorical(data.shot_result)
+model = Sequential()
+model.add(Dense(100, activation='relu', input_shape = (n_cols,)))
+model.add(Dense(100, activation='relu'))
+model.add(Dense(100, activation='relu'))
+model.add(Dense(2, activation='softmax'))
+model.compile(optimizer='adam', loss='categorical_crossentropy',
+metrics=['accuracy'])
+model.fit(predictors, target)
+
+
+#################SAVING THE MODEL#################
+
+from keras.models import load_model
+model.save('model_file.h5')
+my_model = load_model('my_model.h5')
+predictions = my_model.predict(data_to_predict_with)
+probability_true = predictions[:,1]
